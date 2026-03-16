@@ -1,4 +1,4 @@
-package br.com.tiago7mendes.miniredesocial
+package br.com.tiago7mendes.miniredesocial.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -42,7 +42,7 @@ class SignUpActivity : AppCompatActivity() {
 
                     if (task.isSuccessful) {
 
-                        startActivity(Intent(this, HomeActivity::class.java))
+                        startActivity(Intent(this, ProfileActivity::class.java))
                         finish()
 
                     } else {

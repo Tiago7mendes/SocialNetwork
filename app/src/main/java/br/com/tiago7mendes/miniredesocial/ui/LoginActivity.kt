@@ -1,4 +1,4 @@
-package br.com.tiago7mendes.miniredesocial
+package br.com.tiago7mendes.miniredesocial.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
             .signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    startActivity(Intent(this,HomeActivity::class.java))
+                    startActivity(Intent(this, HomeActivity::class.java))
                     Toast.makeText(this, "Login Realiado com Sucesso!", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
