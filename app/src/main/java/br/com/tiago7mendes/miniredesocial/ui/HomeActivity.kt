@@ -1,5 +1,6 @@
 package br.com.tiago7mendes.miniredesocial.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ class HomeActivity : AppCompatActivity() {
 
         userDAO = UserDAO(this)
         carregarDadosUsuario()
+        editarPerfil()
     }
 
     private fun carregarDadosUsuario() {
@@ -44,5 +46,12 @@ class HomeActivity : AppCompatActivity() {
                 Toast.makeText(this, "Erro: $msg", Toast.LENGTH_SHORT).show()
             }
         )
+    }
+
+    private fun editarPerfil(){
+        binding.btnEditProfile.setOnClickListener(){
+            startActivity(Intent(this, ProfileActivity::class.java))
+            finish()
+        }
     }
 }
