@@ -21,6 +21,7 @@ class HomeActivity : AppCompatActivity() {
         userDAO = UserDAO(this)
         carregarDadosUsuario()
         editarPerfil()
+        verPost()
     }
 
     private fun carregarDadosUsuario() {
@@ -33,9 +34,8 @@ class HomeActivity : AppCompatActivity() {
                         val bitmap = Base64Converter.stringToBitmap(it.fotoPerfil)
                         binding.imgLogo.setImageBitmap(bitmap)
                     } catch (e: Exception) {
-                        binding.imgLogo
+                        // Mantém imagem padrão se falhar
                     }
-
                     binding.txtUsername.text = it.username
                     binding.txtNomeCompleto.text = it.nomeCompleto
                 } ?: run {
@@ -48,10 +48,19 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
-    private fun editarPerfil(){
-        binding.btnEditProfile.setOnClickListener(){
+    private fun editarPerfil() {
+        binding.btnEditProfile.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
             finish()
+        }
+    }
+
+    // Navegação para PostActivity — troque POST_ID pelo ID real ou receba dinamicamente
+    private fun verPost() {
+        binding.btnVerPost.setOnClickListener {
+            val intent = Intent(this, PostActivity::class.java)
+            intent.putExtra("POST_ID", 1) // Altere conforme necessário
+            startActivity(intent)
         }
     }
 }

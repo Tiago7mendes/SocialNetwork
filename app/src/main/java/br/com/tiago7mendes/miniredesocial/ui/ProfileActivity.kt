@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.tiago7mendes.miniredesocial.dao.UserDAO
 import br.com.tiago7mendes.miniredesocial.databinding.ActivityProfileBinding
 import br.com.tiago7mendes.miniredesocial.model.User
-import br.com.tiago7mendes.miniredesocial.ui.HomeActivity
 import br.com.tiago7mendes.miniredesocial.util.Base64Converter
 import com.google.firebase.auth.FirebaseAuth
 
@@ -20,7 +19,7 @@ class ProfileActivity : AppCompatActivity() {
     private val galeria = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         uri?.let {
             binding.imgProfile.setImageURI(it)
-        } ?: Toast.makeText(this, "Nenhuma foto selecionada", android.widget.Toast.LENGTH_LONG).show()
+        } ?: Toast.makeText(this, "Nenhuma foto selecionada", Toast.LENGTH_LONG).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +42,7 @@ class ProfileActivity : AppCompatActivity() {
                 }
             },
             onFailure = { msg ->
-                Toast.makeText(this, msg, android.widget.Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             }
         )
     }
@@ -68,12 +67,12 @@ class ProfileActivity : AppCompatActivity() {
 
         userDAO.save(user,
             onSuccess = {
-                Toast.makeText(this, "Perfil salvo!", android.widget.Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Perfil salvo!", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, HomeActivity::class.java))
                 finish()
             },
             onFailure = { msg ->
-                Toast.makeText(this, msg, android.widget.Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             }
         )
     }

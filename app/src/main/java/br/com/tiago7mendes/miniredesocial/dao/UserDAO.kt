@@ -1,7 +1,6 @@
 package br.com.tiago7mendes.miniredesocial.dao
 
 import android.content.Context
-import android.widget.Toast
 import br.com.tiago7mendes.miniredesocial.model.User
 import com.google.firebase.firestore.FirebaseFirestore
 
