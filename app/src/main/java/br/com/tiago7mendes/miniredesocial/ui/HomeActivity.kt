@@ -4,14 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import br.com.tiago7mendes.miniredesocial.adapter.PostAdapter
 import br.com.tiago7mendes.miniredesocial.dao.UserDAO
 import br.com.tiago7mendes.miniredesocial.databinding.ActivityHomeBinding
+import br.com.tiago7mendes.miniredesocial.model.Post
 import br.com.tiago7mendes.miniredesocial.util.Base64Converter
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var userDAO: UserDAO
+    private lateinit var adapter: PostAdapter
+    private var posts = ArrayList<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +28,7 @@ class HomeActivity : AppCompatActivity() {
         userDAO = UserDAO(this)
         carregarDadosUsuario()
         editarPerfil()
-        verPost()
+        carregarFeed()
     }
 
     private fun carregarDadosUsuario() {
@@ -34,7 +41,7 @@ class HomeActivity : AppCompatActivity() {
                         val bitmap = Base64Converter.stringToBitmap(it.fotoPerfil)
                         binding.imgLogo.setImageBitmap(bitmap)
                     } catch (e: Exception) {
-                        // Mantém imagem padrão se falhar
+                        // Mantém a imagem padrão se a conversão falhar
                     }
                     binding.txtUsername.text = it.username
                     binding.txtNomeCompleto.text = it.nomeCompleto
@@ -55,12 +62,27 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // Navegação para PostActivity — troque POST_ID pelo ID real ou receba dinamicamente
-    private fun verPost() {
-        binding.btnVerPost.setOnClickListener {
-            val intent = Intent(this, PostActivity::class.java)
-            intent.putExtra("POST_ID", 1) // Altere conforme necessário
-            startActivity(intent)
+    private fun carregarFeed() {
+        binding.btnCarregarFeed.setOnClickListener {
+            val db = Firebase.firestore
+            db.collection("posts").get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val documents = task.result
+                        posts = ArrayList()
+                        for (document in documents.documents) {
+                            val imageString = document.data!!["imageString"].toString()
+                            val bitmap = Base64Converter.stringToBitmap(imageString)
+                            val descricao = document.data!!["descricao"].toString()
+                            posts.add(Post(descricao, bitmap))
+                        }
+                        adapter = PostAdapter(posts.toTypedArray())
+                        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+                        binding.recyclerView.adapter = adapter
+                    } else {
+                        Toast.makeText(this, "Erro ao carregar feed", Toast.LENGTH_SHORT).show()
+                    }
+                }
         }
     }
 }
