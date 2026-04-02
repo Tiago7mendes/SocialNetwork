@@ -6,18 +6,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.tiago7mendes.miniredesocial.adapter.PostAdapter
+import br.com.tiago7mendes.miniredesocial.auth.UserAuth
 import br.com.tiago7mendes.miniredesocial.dao.UserDAO
 import br.com.tiago7mendes.miniredesocial.databinding.ActivityHomeBinding
 import br.com.tiago7mendes.miniredesocial.model.Post
 import br.com.tiago7mendes.miniredesocial.util.Base64Converter
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var userDAO: UserDAO
     private lateinit var adapter: PostAdapter
+    private val userAuth = UserAuth()
     private var posts = ArrayList<Post>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +33,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun carregarDadosUsuario() {
-        val email = FirebaseAuth.getInstance().currentUser?.email ?: return
+        val email = userAuth.getEmailUsuarioLogado() ?: return
 
         userDAO.getByEmail(email,
             onSuccess = { user ->

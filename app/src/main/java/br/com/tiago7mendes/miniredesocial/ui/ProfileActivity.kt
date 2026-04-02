@@ -6,15 +6,16 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import br.com.tiago7mendes.miniredesocial.auth.UserAuth
 import br.com.tiago7mendes.miniredesocial.dao.UserDAO
 import br.com.tiago7mendes.miniredesocial.databinding.ActivityProfileBinding
 import br.com.tiago7mendes.miniredesocial.model.User
 import br.com.tiago7mendes.miniredesocial.util.Base64Converter
-import com.google.firebase.auth.FirebaseAuth
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
     private lateinit var userDAO: UserDAO
+    private val userAuth = UserAuth()
 
     private val galeria = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         uri?.let {
@@ -33,7 +34,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun carregarDadosUsuario() {
-        val email = FirebaseAuth.getInstance().currentUser?.email ?: return
+        val email = userAuth.getEmailUsuarioLogado() ?: return
         userDAO.getByEmail(email,
             onSuccess = { user ->
                 user?.let {
@@ -51,14 +52,13 @@ class ProfileActivity : AppCompatActivity() {
         binding.btnChangePhoto.setOnClickListener {
             galeria.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-
         binding.btnSave.setOnClickListener {
             salvarPerfil()
         }
     }
 
     private fun salvarPerfil() {
-        val email = FirebaseAuth.getInstance().currentUser?.email ?: return
+        val email = userAuth.getEmailUsuarioLogado() ?: return
         val username = binding.edtUserName.text.toString().trim()
         val nomeCompleto = binding.edtNameComplete.text.toString().trim()
         val fotoPerfilString = Base64Converter.drawableToString(binding.imgProfile.drawable)
